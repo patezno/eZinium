@@ -98,7 +98,7 @@ public class TokenContract {
             removeCoinsOwner(coins);
             addCoins(pk, coins);
 
-        } catch (AssertionError e) {}
+        } catch (AssertionError ignored) {}
     }
 
     private void requiere(double coins) {
@@ -133,7 +133,7 @@ public class TokenContract {
             requiere(owner, coins);
             removeCoins(owner, coins);
             addCoins(buyer, coins);
-        } catch (AssertionError e) {}
+        } catch (AssertionError ignored) {}
     }
 
     private void requiere(PublicKey owner, double coins) {
@@ -160,6 +160,19 @@ public class TokenContract {
                         getSymbol());
             }
         }
+    }
+
+    public double totalTokensSold() {
+
+        double totalTickets = 0d;
+
+        for (PublicKey key : getBalances().keySet()) {
+
+            if (!key.equals(this.getAddress().getPK())) {
+                totalTickets += getBalances().get(key);
+            }
+        }
+        return totalTickets;
     }
 
     @Override
