@@ -4,12 +4,19 @@ import java.security.PublicKey;
 
 public class Address {
 
+    // Atributos
+
     private PublicKey PK = null;
     private PrivateKey SK = null;
     private double balance = 0d;
+    private String symbol = "EZI";
+
+    // Constructor
 
     public Address() {
     }
+
+    // Setters
 
     public void setPK(PublicKey PK) {
         this.PK = PK;
@@ -18,6 +25,8 @@ public class Address {
     public void setSK(PrivateKey SK) {
         this.SK = SK;
     }
+
+    // Getters
 
     public PublicKey getPK() {
         return PK;
@@ -31,6 +40,12 @@ public class Address {
         return balance;
     }
 
+    public String getSymbol() {
+        return symbol;
+    }
+
+    // Metodos
+
     public void generateKeyPair() {
 
         KeyPair pair = GenSig.generateKeyPair();
@@ -43,6 +58,6 @@ public class Address {
     @Override
     public String toString() {
         return "PK = " + getPK().hashCode() + "\n" +
-                "Balance = " + getBalance() + " EZI";
+                "Balance = " + getBalance() + getSymbol();
     }
 }

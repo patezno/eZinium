@@ -1,7 +1,7 @@
 import org.junit.Test;
 
 public class TokenContractTest {
-
+    /*
     @Test
     public void payable_test() {
 
@@ -20,5 +20,7 @@ public class TokenContractTest {
 
         // verifico la trasnferencia de EZI
         assertEquals(20d, ricknillos.owner().getBalance(), 0d);
+
     }
+    */
 }
