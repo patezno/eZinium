@@ -1,3 +1,7 @@
+import java.security.PublicKey;
+import java.util.HashMap;
+import java.util.Map;
+
 public class TokenContract {
 
     // Atributos
@@ -5,7 +9,8 @@ public class TokenContract {
     private Address address = null;
     private String name = null;
     private String symbol = null;
-    private int TotalSupply = 0;
+    private double totalSupply = 0;
+    private Map<PublicKey, Double> balances = new HashMap<PublicKey, Double>();
 
     // Constructores
 
@@ -26,8 +31,8 @@ public class TokenContract {
         this.symbol = symbol;
     }
 
-    public void setTotalSupply(int totalSupply) {
-        TotalSupply = totalSupply;
+    public void setTotalSupply(double totalSupply) {
+        this.totalSupply = totalSupply;
     }
 
     // Getters
@@ -45,8 +50,20 @@ public class TokenContract {
         return symbol;
     }
 
-    public int getTotalSupply() {
-        return TotalSupply;
+    public double getTotalSupply() {
+        return totalSupply;
+    }
+
+    public Map<PublicKey, Double> getBalances() {
+        return balances;
+    }
+
+    public void addOwner(PublicKey PK, double totalSupply) {
+
+        if (!getBalances().containsKey(PK)) {
+            getBalances().put(PK, totalSupply);
+        }
+
     }
 
     @Override

@@ -26,6 +26,10 @@ public class Address {
         this.SK = SK;
     }
 
+    public void setBalance(double balance) {
+        this.balance += balance;
+    }
+
     // Getters
 
     public PublicKey getPK() {
@@ -59,5 +63,9 @@ public class Address {
     public String toString() {
         return "PK = " + getPK().hashCode() + "\n" +
                 "Balance = " + getBalance() + getSymbol();
+    }
+
+    public void addEZI(double coin) {
+        setBalance(coin);
     }
 }
