@@ -20,6 +20,8 @@ public class TokenContractTest {
         contract.setSymbol("€");
         contract.setTotalSupply(200);
 
+        contract.addOwner(address.getPK(), contract.getTotalSupply());
+
     }
 
     @Test
@@ -38,7 +40,6 @@ public class TokenContractTest {
         Address rick = new Address();
         rick.generateKeyPair();
 
-        contract.addOwner(address.getPK(), contract.getTotalSupply());
         contract.addOwner(rick.getPK(), contract.getTotalSupply());
 
         assertEquals(2, contract.numOwners());
@@ -46,14 +47,12 @@ public class TokenContractTest {
 
     @Test
     public void balanceOfTest() {
-        contract.addOwner(address.getPK(), contract.getTotalSupply());
         assertEquals(200, contract.balanceOf(address.getPK()), 0.0);
     }
 
     @Test
     public void addOwnerRepeatTest() {
 
-        contract.addOwner(address.getPK(), contract.getTotalSupply());
         contract.addOwner(address.getPK(), 500);
 
         assertEquals(1, contract.numOwners());
@@ -61,8 +60,8 @@ public class TokenContractTest {
 
     @Test
     public void removeCoinsTest() {
-        contract.addOwner(address.getPK(), contract.getTotalSupply());
-        contract.removeCoins(2d);
+
+        contract.removeCoinsOwner(2d);
         assertEquals(198, contract.getTotalSupply(), 0.0);
     }
 

@@ -95,28 +95,71 @@ public class TokenContract {
         try {
 
             requiere(coins);
-            removeCoins(coins);
+            removeCoinsOwner(coins);
             addCoins(pk, coins);
 
         } catch (AssertionError e) {}
     }
 
     private void requiere(double coins) {
+
         boolean holds = true;
         double result = this.getTotalSupply() - coins;
+
         if (result < 0) {
             holds = false;
         }
         assert(holds);
     }
 
-    public void removeCoins(Double coins) {
+    public void removeCoinsOwner(Double coins) {
         getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
         setTotalSupply(this.getTotalSupply() - coins);
     }
 
     public void addCoins(PublicKey pk, Double coins) {
-        getBalances().replace(pk, coins);
+
+        if (!getBalances().containsKey(pk)) {
+            addOwner(pk, coins);
+        } else {
+            double pkCoins = getBalances().get(pk);
+            getBalances().replace(pk, pkCoins + coins);
+        }
+    }
+
+    public void transfer(PublicKey owner, PublicKey buyer, double coins) {
+
+        try {
+            requiere(owner, coins);
+            removeCoins(owner, coins);
+            addCoins(buyer, coins);
+        } catch (AssertionError e) {}
+    }
+
+    private void requiere(PublicKey owner, double coins) {
+
+        boolean holds = true;
+        double ownerCoins = getBalances().get(owner);
+
+        if ((ownerCoins - coins) < 0) {
+            holds = false;
+        }
+        assert(holds);
+    }
+
+    private void removeCoins(PublicKey owner, double coins) {
+        double ownerCoins = getBalances().get(owner);
+        getBalances().replace(owner, ownerCoins - coins);
+    }
+
+    public void owners() {
+        for (PublicKey key : getBalances().keySet()) {
+            if (!key.equals(this.getAddress().getPK())) {
+                System.out.println("Owner: " + key.hashCode() + " " +
+                        this.balanceOf(key) + " " +
+                        getSymbol());
+            }
+        }
     }
 
     @Override

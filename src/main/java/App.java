@@ -193,5 +193,48 @@ public class App {
                 + ricknillos.balanceOf(morty.getPK())
                 + " "
                 + ricknillos.getSymbol());
+
+        /**
+         * A veces, hay reventa ;)
+         *
+         * Morty le vende 1 entrada a Jen.
+         *
+         * Dado un remitente, un destinatario, y una cantidad,
+         * se transfieren tokens de una direccion a la otra.
+         *
+         * transfer()
+         * @param sender PK
+         * @param recipient PK
+         * @param cantidad de tokens
+         */
+
+        System.out.println("\n" + "Reventa de entradas" + "\n" +
+                "==================="        );
+
+        ricknillos.transfer(morty.getPK(), jen.getPK(), 1d);
+
+        System.out.println("Entradas de Morty: "
+                + ricknillos.balanceOf(morty.getPK())
+                + " "
+                + ricknillos.getSymbol());
+        System.out.println("Entradas de Jen: "
+                + ricknillos.balanceOf(jen.getPK())
+                + " "
+                + ricknillos.getSymbol());
+
+        /**
+         * Llega el dia del concierto y Rick quiere
+         * controlar el acceso a la sala de conciertos.
+         * Muestra una lista de compradores con el número de entradas
+         * que han adquirido (excluyendo a Rick).
+         *
+         * owners()
+         * @return muestra en consola la PublicKey de los compradores
+         *         y el numero de tokens que han adquirido
+         */
+
+        System.out.println("\n" + "Lista de compradores" + "\n" +
+                "===================="        );
+        ricknillos.owners();
     }
 }
