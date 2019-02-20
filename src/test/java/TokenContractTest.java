@@ -59,15 +59,14 @@ public class TokenContractTest {
     }
 
     @Test
-    public void removeCoinsTest() {
-
+    public void removeCoinsOwnerTest() {
         contract.removeCoinsOwner(2d);
         assertEquals(198, contract.getTotalSupply(), 0.0);
     }
-
+    /*
     @Test
     public void payable_test() {
-        /*
+
         Address rick = new Address();
         rick.generateKeyPair();
         TokenContract ricknillos = new TokenContract(rick);
@@ -86,5 +85,4 @@ public class TokenContractTest {
 
     }
     */
-    }
 }

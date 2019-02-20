@@ -59,13 +59,15 @@ public class Address {
 
     }
 
-    public void addEZI(double coin) {
-        setBalance(coin);
-    }
-
     @Override
     public String toString() {
         return "PK = " + getPK().hashCode() + "\n" +
                 "Balance = " + getBalance() + " " + getSymbol();
+    }
+
+    public void addEZI(double v) {
+    }
+
+    public void send(TokenContract ricknillos, double v) {
     }
 }

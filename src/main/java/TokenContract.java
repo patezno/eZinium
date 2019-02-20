@@ -153,11 +153,14 @@ public class TokenContract {
     }
 
     public void owners() {
+
         for (PublicKey key : getBalances().keySet()) {
+
             if (!key.equals(this.getAddress().getPK())) {
+
                 System.out.println("Owner: " + key.hashCode() + " " +
-                        this.balanceOf(key) + " " +
-                        getSymbol());
+                                    this.balanceOf(key) + " " +
+                                    getSymbol());
             }
         }
     }
