@@ -101,21 +101,23 @@ public class TokenContract {
     }
 
     public void transfer(PublicKey pk, double coins) {
+        try {
+            this.requiere(coins);
+            this.getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
+            this.setTotalSupply(this.getTotalSupply() - coins);
+            this.getBalances().replace(pk, coins);
+        } catch (AssertionError e) {
 
-        this.requiere(coins);
-        this.getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
-        this.setTotalSupply(this.getTotalSupply() - coins);
-        this.getBalances().replace(pk, coins);
-
+        }
     }
 
-    private Boolean requiere(double coins) {
+    private void requiere(double coins) {
         boolean holds = true;
         double result = this.getTotalSupply() - coins;
         if (result < 0) {
             holds = false;
         }
-        return holds;
+        assert(holds);
     }
 
     @Override
