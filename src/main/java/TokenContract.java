@@ -81,8 +81,13 @@ public class TokenContract {
 
     public double balanceOf(PublicKey pk) {
 
-        double value = 0d;
+        try {
+            return getBalances().get(pk);
+        } catch (NullPointerException e) {
+            return 0d;
+        }
 
+        /*
         for (Iterator<Map.Entry<PublicKey, Double>> entries = getBalances().entrySet().iterator(); entries.hasNext(); ) {
 
             Map.Entry<PublicKey, Double> entry = entries.next();
@@ -92,13 +97,32 @@ public class TokenContract {
             }
         }
         return value;
+        */
+    }
+
+    public void transfer(PublicKey pk, double coins) {
+
+        this.requiere(coins);
+        this.getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
+        this.setTotalSupply(this.getTotalSupply() - coins);
+        this.getBalances().replace(pk, coins);
+
+    }
+
+    private Boolean requiere(double coins) {
+        boolean holds = true;
+        double result = this.getTotalSupply() - coins;
+        if (result < 0) {
+            holds = false;
+        }
+        return holds;
     }
 
     @Override
     public String toString() {
         return "Name = " + getName() + "\n" +
                 "Symbol = " + getSymbol() + "\n" +
-                "totalSupply = " + getTotalSupply() + "\n" +
+                "totalSupply = " + getTotalSupply() + " " + getSymbol() + "\n" +
                 "owner PK = " + getAddress().hashCode();
     }
 }
