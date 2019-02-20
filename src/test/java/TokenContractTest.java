@@ -60,6 +60,13 @@ public class TokenContractTest {
     }
 
     @Test
+    public void removeCoinsTest() {
+        contract.addOwner(address.getPK(), contract.getTotalSupply());
+        contract.removeCoins(2d);
+        assertEquals(198, contract.getTotalSupply(), 0.0);
+    }
+
+    @Test
     public void payable_test() {
         /*
         Address rick = new Address();

@@ -59,6 +59,8 @@ public class TokenContract {
         return balances;
     }
 
+    // Metodos
+
     public void addOwner(PublicKey PK, double totalSupply) {
 
         if (!getBalances().containsKey(PK)) {
@@ -86,29 +88,17 @@ public class TokenContract {
         } catch (NullPointerException e) {
             return 0d;
         }
-
-        /*
-        for (Iterator<Map.Entry<PublicKey, Double>> entries = getBalances().entrySet().iterator(); entries.hasNext(); ) {
-
-            Map.Entry<PublicKey, Double> entry = entries.next();
-
-            if (entry.getKey().equals(pk)) {
-                value = entry.getValue();
-            }
-        }
-        return value;
-        */
     }
 
     public void transfer(PublicKey pk, double coins) {
-        try {
-            this.requiere(coins);
-            this.getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
-            this.setTotalSupply(this.getTotalSupply() - coins);
-            this.getBalances().replace(pk, coins);
-        } catch (AssertionError e) {
 
-        }
+        try {
+
+            requiere(coins);
+            removeCoins(coins);
+            addCoins(pk, coins);
+
+        } catch (AssertionError e) {}
     }
 
     private void requiere(double coins) {
@@ -118,6 +108,15 @@ public class TokenContract {
             holds = false;
         }
         assert(holds);
+    }
+
+    public void removeCoins(Double coins) {
+        getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
+        setTotalSupply(this.getTotalSupply() - coins);
+    }
+
+    public void addCoins(PublicKey pk, Double coins) {
+        getBalances().replace(pk, coins);
     }
 
     @Override

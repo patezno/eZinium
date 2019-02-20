@@ -177,5 +177,21 @@ public class App {
                 + ricknillos.balanceOf(morty.getPK())
                 + " "
                 + ricknillos.getSymbol());
+
+        // verifica que require falla si no hay tokens suficientes en el balance de Rick
+        ricknillos.transfer(morty.getPK(), 300d);
+
+        System.out.println("Rick no tiene 300 entradas => entradas de Morty: "
+                + ricknillos.balanceOf(morty.getPK())
+                + " "
+                + ricknillos.getSymbol());
+
+        // Morty vuelve a comprar un par de entradas mas
+        ricknillos.transfer(morty.getPK(), 2d);
+
+        System.out.println("2 entradas mas para Morty: "
+                + ricknillos.balanceOf(morty.getPK())
+                + " "
+                + ricknillos.getSymbol());
     }
 }
