@@ -1,5 +1,6 @@
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class TokenContract {
@@ -9,7 +10,7 @@ public class TokenContract {
     private Address address = null;
     private String name = null;
     private String symbol = null;
-    private double totalSupply = 0;
+    private double totalSupply = 0d;
     private Map<PublicKey, Double> balances = new HashMap<PublicKey, Double>();
 
     // Constructores
@@ -64,6 +65,33 @@ public class TokenContract {
             getBalances().put(PK, totalSupply);
         }
 
+    }
+
+    public int numOwners() {
+
+        int numOwners = 0;
+
+        for (PublicKey key : getBalances().keySet()) {
+            numOwners++;
+        }
+
+        return numOwners;
+
+    }
+
+    public double balanceOf(PublicKey pk) {
+
+        double value = 0d;
+
+        for (Iterator<Map.Entry<PublicKey, Double>> entries = getBalances().entrySet().iterator(); entries.hasNext(); ) {
+
+            Map.Entry<PublicKey, Double> entry = entries.next();
+
+            if (entry.getKey().equals(pk)) {
+                value = entry.getValue();
+            }
+        }
+        return value;
     }
 
     @Override
