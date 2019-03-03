@@ -60,10 +60,10 @@ public class TokenContractTest {
 
     @Test
     public void removeCoinsOwnerTest() {
-        contract.removeCoinsOwner(2d);
+        contract.removeTokensOwner(2d);
         assertEquals(198, contract.getTotalSupply(), 0.0);
     }
-    /*
+
     @Test
     public void payable_test() {
 
@@ -81,8 +81,7 @@ public class TokenContractTest {
         assertEquals(4d, ricknillos.balanceOf(morty.getPK()), 0d);   
 
         // verifico la trasnferencia de EZI
-        assertEquals(20d, ricknillos.owner().getBalance(), 0d);
+        assertEquals(20d, ricknillos.getAddress().getBalance(), 0d);
 
     }
-    */
 }

@@ -1,6 +1,5 @@
 import java.security.PublicKey;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class TokenContract {
@@ -8,6 +7,7 @@ public class TokenContract {
     // Atributos
 
     private Address address = null;
+    private PublicKey owner = null;
     private String name = null;
     private String symbol = null;
     private double totalSupply = 0d;
@@ -19,7 +19,10 @@ public class TokenContract {
     }
 
     public TokenContract(Address address) {
+
         this.address = address;
+        this.owner = address.getPK();
+
     }
 
     // Setters
@@ -38,9 +41,12 @@ public class TokenContract {
 
     // Getters
 
-
     public Address getAddress() {
         return address;
+    }
+
+    public PublicKey getOwner() {
+        return owner;
     }
 
     public String getName() {
@@ -62,94 +68,73 @@ public class TokenContract {
     // Metodos
 
     public void addOwner(PublicKey PK, double totalSupply) {
-
-        if (!getBalances().containsKey(PK)) {
-            getBalances().put(PK, totalSupply);
-        }
-
+        getBalances().putIfAbsent(PK, totalSupply);
     }
 
     public int numOwners() {
-
-        int numOwners = 0;
-
-        for (PublicKey key : getBalances().keySet()) {
-            numOwners++;
-        }
-
-        return numOwners;
-
+        return getBalances().size();
     }
 
-    public double balanceOf(PublicKey pk) {
-
-        try {
-            return getBalances().get(pk);
-        } catch (NullPointerException e) {
-            return 0d;
-        }
+    public Double balanceOf(PublicKey pk) {
+        return getBalances().get(pk);
     }
 
-    public void transfer(PublicKey pk, double coins) {
+    public void transfer(PublicKey pk, double tokens) {
 
         try {
 
-            requiere(coins);
-            removeCoinsOwner(coins);
-            addCoins(pk, coins);
+            requiere(tokens);
+            removeTokensOwner(tokens);
+            addTokens(pk, tokens);
 
-        } catch (AssertionError ignored) {}
-    }
-
-    private void requiere(double coins) {
-
-        boolean holds = true;
-        double result = this.getTotalSupply() - coins;
-
-        if (result < 0) {
-            holds = false;
+        } catch (AssertionError ignored) {
         }
-        assert(holds);
     }
 
-    public void removeCoinsOwner(Double coins) {
-        getBalances().replace(this.getAddress().getPK(), (this.getTotalSupply() - coins));
-        setTotalSupply(this.getTotalSupply() - coins);
+    private void requiere(double token) {
+
+        if (token > getBalances().get(owner)) {
+            throw new AssertionError();
+        }
+
     }
 
-    public void addCoins(PublicKey pk, Double coins) {
+    public void removeTokensOwner(Double tokens) {
+
+        double newTotalSupply = this.getTotalSupply() - tokens;
+
+        getBalances().replace(this.getAddress().getPK(), newTotalSupply);
+        setTotalSupply(this.getTotalSupply() - tokens);
+
+    }
+
+    public void addTokens(PublicKey pk, Double tokens) {
 
         if (!getBalances().containsKey(pk)) {
-            addOwner(pk, coins);
+            addOwner(pk, tokens);
         } else {
             double pkCoins = getBalances().get(pk);
-            getBalances().replace(pk, pkCoins + coins);
+            getBalances().replace(pk, pkCoins + tokens);
         }
     }
 
-    public void transfer(PublicKey owner, PublicKey buyer, double coins) {
+    public void transfer(PublicKey owner, PublicKey buyer, double tokens) {
 
         try {
-            requiere(owner, coins);
-            removeCoins(owner, coins);
-            addCoins(buyer, coins);
-        } catch (AssertionError ignored) {}
-    }
 
-    private void requiere(PublicKey owner, double coins) {
+            requiere(tokens);
+            removeTokens(owner, tokens);
+            addTokens(buyer, tokens);
 
-        boolean holds = true;
-        double ownerCoins = getBalances().get(owner);
-
-        if ((ownerCoins - coins) < 0) {
-            holds = false;
+        } catch (AssertionError ignored) {
         }
-        assert(holds);
     }
 
-    private void removeCoins(PublicKey owner, double coins) {
-        double ownerCoins = getBalances().get(owner);
-        getBalances().replace(owner, ownerCoins - coins);
+    public void removeTokens(PublicKey owner, double tokens) {
+
+        double ownerTokens = getBalances().get(owner);
+        getBalances().replace(owner, ownerTokens - tokens);
+
     }
 
     public void owners() {
@@ -159,8 +144,8 @@ public class TokenContract {
             if (!key.equals(this.getAddress().getPK())) {
 
                 System.out.println("Owner: " + key.hashCode() + " " +
-                                    this.balanceOf(key) + " " +
-                                    getSymbol());
+                        this.balanceOf(key) + " " +
+                        getSymbol());
             }
         }
     }
@@ -178,11 +163,30 @@ public class TokenContract {
         return totalTickets;
     }
 
+    public void payable(PublicKey pk, double ezinium) {
+
+        double tickets = 0d;
+        double coins = ezinium;
+
+        while (coins >= 5d) {
+            tickets++;
+            coins -= 5;
+        }
+
+        if (tickets > 0) {
+            this.transfer(pk, tickets);
+            this.getAddress().transferEZI(this.getAddress(), ezinium);
+        }
+
+    }
+
     @Override
     public String toString() {
+
         return "Name = " + getName() + "\n" +
                 "Symbol = " + getSymbol() + "\n" +
                 "totalSupply = " + getTotalSupply() + " " + getSymbol() + "\n" +
                 "owner PK = " + getAddress().hashCode();
+
     }
 }

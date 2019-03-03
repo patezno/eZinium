@@ -59,15 +59,23 @@ public class Address {
 
     }
 
+    public void addEZI(double coins) {
+        setBalance(coins);
+    }
+
+    public void send(TokenContract contract, double coins) {
+        contract.payable(contract.getOwner(), coins);
+    }
+
+    public void transferEZI(Address address, double ezinium) {
+        address.addEZI(ezinium);
+    }
+
     @Override
     public String toString() {
+
         return "PK = " + getPK().hashCode() + "\n" +
                 "Balance = " + getBalance() + " " + getSymbol();
-    }
 
-    public void addEZI(double v) {
-    }
-
-    public void send(TokenContract ricknillos, double v) {
     }
 }
